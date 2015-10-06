@@ -175,6 +175,14 @@ function checkHours(hours)
     return (hours >= 0 && hours <= 23)
 }
 
+function printHelp()
+{
+    console.log('roman-time first_number second_number');
+    console.log('   where: first_digit <- [0, 23]');
+    console.log('   where: second_digit <- [0, 59]');
+}
+
+
 /**
  * Проверка диапозона числа, в котором минуты.
  *
@@ -201,6 +209,7 @@ if (checkCode == 0)
     else
     {
         console.error('You have specified not the correct time');
+        printHelp();
     }
 }
 else
@@ -213,4 +222,5 @@ else
     {
         console.error('You have entered too many arguments');
     }
+    printHelp();
 }
