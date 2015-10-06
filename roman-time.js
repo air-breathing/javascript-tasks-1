@@ -1,18 +1,23 @@
 /**
  * Created by Надежда on 02.10.2015.
  */
-function getRomanTime(timeInDigits)
+
 /**
  * Функция принимает на вход число, возвращает его римское представление.
  *
- * @param timeInDigits
+ * @param {number} timeInDigits
  * @returns {string}
  */
+function getRomanTime(timeInDigits)
 {
     var result = '';
     var current = 0;
     var digits = [50, 40, 10, 9, 5, 4, 1];
-    var romeDigits = {50: 'L', 40: 'XL', 10: 'X', 9: 'IX', 5: 'V', 4: 'IV', 1: 'I'};
+    var romeDigits = {50: 'L', 40: 'XL', 10: 'X', 9: 'IX', 5: 'V', 4: 'IV', 1: 'I', 0: 'nulla'};
+    if (timeInDigits == 0)
+    {
+        return (result + romeDigits[0]);
+    }
     for (;current < digits.length; current++)
     {
         while(timeInDigits >= digits[current])
@@ -24,79 +29,83 @@ function getRomanTime(timeInDigits)
     return result;
 }
 
-function getBeautyRomanDigit(romanDigit)
 /**
  * Принимает цифру в римской форме, возвращает массив из семи строк, содержащий ASCII представление буквы.
  *
- * @param romanDigit
+ * @param {string} romanDigit
  * @returns {string[]}
  */
+function getBeautyRomanDigit(romanDigit)
 {
     switch (romanDigit)
         {
             case 'I':
-                return [' %%%% ',
-                        '  %%  ',
-                        '  %%  ',
-                        '  %%  ',
-                        '  %%  ',
-                        '  %%  ',
-                        ' %%%% '];
+                return [' %%% ',
+                        '  %  ',
+                        '  %  ',
+                        '  %  ',
+                        ' %%% '];
             case 'V':
-                return [' %%%%     %%%% ',
-                        '  %%       %%  ',
-                        '   %%     %%   ',
-                        '    %%   %%    ',
-                        '     %% %%     ',
-                        '      %%%      ',
-                        '       %       '];
+                return [' %%%   %%% ',
+                        '  %     %  ',
+                        '   %   %   ',
+                        '    % %    ',
+                        '     %     '];
             case 'L':
-                return [' %%%%        ',
-                        '  %%         ',
-                        '  %%         ',
-                        '  %%         ',
-                        '  %%     %%% ',
-                        '  %%      %% ',
-                        ' %%%%%%%%%%% '];
+                return [' %%%    ',
+                        '  %     ',
+                        '  %     ',
+                        '  %   %  ',
+                        ' %%%%%% '];
             case 'X':
-                return [' %%%%  %%%% ',
-                        '  %%    %%  ',
-                        '   %%  %%   ',
-                        '    %%%%    ',
-                        '   %%  %%   ',
-                        '  %%    %%  ',
-                        ' %%%%  %%%% '];
+                return [' %% %% ',
+                        '  % %  ',
+                        '   %   ',
+                        '  % %  ',
+                        ' %% %% '];
+            case 'n':
+                return [' % %%   %   %  %  %   %%%  ',
+                        ' %%  %  %   %  %  %  %   % ',
+                        ' %   %  %   %  %  %  %   % ',
+                        ' %   %  %  %%  %  %  %  %% ',
+                        ' %   %   %% %  %  %   %% % '];
             default:
                 console.error('Error in args of function');
         }
 }
 
-function getPointsLines()
 /**
- * Возвращает массив 7 строк, изображающие две точки в ASCII.
+ * Возвращает массив 5 строк, изображающие две точки в ASCII.
  *
  * @returns {string[]}
  */
+function getPointsLines()
 {
-    return['       ',
-           '       ',
-           '  %%%  ',
-           '  %%%  ',
-           '       ',
-           '  %%%  ',
-           '  %%%  '];
+    return[' %% ',
+           ' %% ',
+           '    ',
+           ' %% ',
+           ' %% '];
 }
 
-function printBeautyRomanTime(hours, minutes)
 /**
  * Принимает два римсих числа и печатает их.
  *
- * @param hours
- * @param minutes
+ * @param {string} hours
+ * @param {string} minutes
  */
+function printBeautyRomanTime(hours, minutes)
 {
 
-    result = ['', '', '', '', '', '', ''];
+    result = ['', '', '', '', ''];
+    if (hours == 'nulla')
+    {
+        hours = 'n';
+    }
+    if (minutes == 'nulla')
+    {
+        minutes = 'n';
+    }
     for (var i=0; i < hours.length; i++)
     {
        result = addNewDigitInRes(getBeautyRomanDigit(hours[i]), result);
@@ -112,16 +121,16 @@ function printBeautyRomanTime(hours, minutes)
     }
 }
 
-function addNewDigitInRes(digit, result)
 /**
  * Вспомогательная функция. Добавляет дополнительные данные к результату.
  *
  * digit - римское число в виде массива строк
  * result -  буфер, к которому надо добавить массив.
  *
- * @param digit
- * @param result
+ * @param {string[]} digit
+ * @param {string[]}result
  */
+function addNewDigitInRes(digit, result)
 {
     for (var j = 0; j < result.length; j++)
     {
@@ -130,44 +139,49 @@ function addNewDigitInRes(digit, result)
     return result;
 }
 
-
-function checkCorrectOfArgs(args)
 /**
  * Проверка колличества аргументов, поданных программе.
  *
- * @param args
- * @returns {boolean}
+ * @param args, аргументы командной строки в массиве
+ * @returns {number}
  */
+function checkCorrectOfArgs(args)
 {
-    if (args.length != 4)
+    if (args.length > 4)
     {
-        return false;
+        return 1;
     }
     else
     {
-        return true;
+        if (args.length == 4)
+        {
+            return 0;
+        }
+        else
+        {
+            return -1;
+        }
     }
 }
 
-function checkHours(hours)
 /**
  * Проверка диапозона числа, в котором часы.
  *
- * @param hours
+ * @param {number} hours
  * @returns {boolean}
  */
-
+function checkHours(hours)
 {
     return (hours >= 0 && hours <= 23)
 }
 
-function checkMinutes(minutes)
 /**
  * Проверка диапозона числа, в котором минуты.
  *
- * @param minutes
+ * @param {number} minutes
  * @returns {boolean}
  */
+function checkMinutes(minutes)
 {
     return (minutes >= 0 && minutes <= 59)
 }
@@ -175,19 +189,28 @@ function checkMinutes(minutes)
 var hours = process.argv[2];
 var minutes = process.argv[3];
 
-if (checkCorrectOfArgs(process.argv))
+checkCode = checkCorrectOfArgs(process.argv);
+
+if (checkCode == 0)
 {
     if (checkHours(hours) && checkMinutes(minutes))
     {
-        console.log(getRomanTime(hours), getRomanTime(minutes));
+        console.log(getRomanTime(hours), ' : ', getRomanTime(minutes));
         printBeautyRomanTime(getRomanTime(hours), getRomanTime(minutes));
     }
     else
     {
-        console.error('You have specified not the correct time')
+        console.error('You have specified not the correct time');
     }
 }
 else
 {
-    console.error('You have entered too many arguments')
+    if (checkCode == -1)
+    {
+        console.error('You have entered too few arguments');
+    }
+    else
+    {
+        console.error('You have entered too many arguments');
+    }
 }
