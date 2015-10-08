@@ -37,41 +37,34 @@ function getRomanTime(timeInDigits)
  */
 function getBeautyRomanDigit(romanDigit)
 {
-    switch (romanDigit)
-        {
-            case 'I':
-                return [' %%% ',
-                        '  %  ',
-                        '  %  ',
-                        '  %  ',
-                        ' %%% '];
-            case 'V':
-                return [' %%%   %%% ',
-                        '  %     %  ',
-                        '   %   %   ',
-                        '    % %    ',
-                        '     %     '];
-            case 'L':
-                return [' %%%    ',
-                        '  %     ',
-                        '  %     ',
-                        '  %   %  ',
-                        ' %%%%%% '];
-            case 'X':
-                return [' %% %% ',
-                        '  % %  ',
-                        '   %   ',
-                        '  % %  ',
-                        ' %% %% '];
-            case 'n':
-                return [' % %%   %   %  %  %   %%%  ',
-                        ' %%  %  %   %  %  %  %   % ',
-                        ' %   %  %   %  %  %  %   % ',
-                        ' %   %  %  %%  %  %  %  %% ',
-                        ' %   %   %% %  %  %   %% % '];
-            default:
-                console.error('Error in args of function');
-        }
+    var romanDigitsDict = {
+        'I': [' @@@ ',
+            '  @  ',
+            '  @  ',
+            '  @  ',
+            ' @@@ '],
+        'V': [' @@@   @@@ ',
+            '  @     @  ',
+            '   @   @   ',
+            '    @ @    ',
+            '     @     '],
+        'L': [' @@@    ',
+            '  @     ',
+            '  @     ',
+            '  @   @ ',
+            ' @@@@@@ '],
+        'X': [' @@ @@ ',
+            '  @ @  ',
+            '   @   ',
+            '  @ @  ',
+            ' @@ @@ '],
+        'n': [' @ @@   @   @  @  @   @@@  ',
+            ' @@  @  @   @  @  @  @   @ ',
+            ' @   @  @   @  @  @  @   @ ',
+            ' @   @  @  @@  @  @  @  @@ ',
+            ' @   @   @@ @  @  @   @@ @ ']
+    }
+        return romanDigitsDict[romanDigit];
 }
 
 /**
@@ -81,11 +74,11 @@ function getBeautyRomanDigit(romanDigit)
  */
 function getPointsLines()
 {
-    return[' %% ',
-           ' %% ',
+    return[' @@ ',
+           ' @@ ',
            '    ',
-           ' %% ',
-           ' %% '];
+           ' @@ ',
+           ' @@ '];
 }
 
 /**
@@ -97,7 +90,7 @@ function getPointsLines()
 function printBeautyRomanTime(hours, minutes)
 {
 
-    result = ['', '', '', '', ''];
+    var result = ['', '', '', '', ''];
     if (hours == 'nulla')
     {
         hours = 'n';
@@ -108,17 +101,18 @@ function printBeautyRomanTime(hours, minutes)
     }
     for (var i=0; i < hours.length; i++)
     {
-       result = addNewDigitInRes(getBeautyRomanDigit(hours[i]), result);
+       addNewDigitInRes(getBeautyRomanDigit(hours[i]), result);
     }
-    result = addNewDigitInRes(getPointsLines(), result);
+    addNewDigitInRes(getPointsLines(), result);
     for (var i=0; i < minutes.length; i++)
     {
-        result = addNewDigitInRes(getBeautyRomanDigit(minutes[i]), result);
+        addNewDigitInRes(getBeautyRomanDigit(minutes[i]), result);
     }
-    for (var i = 0; i < result.length; i++)
+    console.log(result.join('\n'));
+    /*for (var i = 0; i < result.length; i++)
     {
         console.log(result[i]);
-    }
+    }*/
 }
 
 /**
@@ -132,15 +126,16 @@ function printBeautyRomanTime(hours, minutes)
  */
 function addNewDigitInRes(digit, result)
 {
-    for (var j = 0; j < result.length; j++)
-    {
+    for (var j = 0; j < result.length; j++) {
         result[j] += digit[j];
     }
-    return result;
 }
 
 /**
  * Проверка колличества аргументов, поданных программе.
+ * 0 - количество аргументов четыре
+ * 1 - больше четырех
+ * -1 - меньше четырех
  *
  * @param args, аргументы командной строки в массиве
  * @returns {number}
@@ -165,15 +160,18 @@ function checkCorrectOfArgs(args)
 }
 
 /**
- * Проверка диапозона числа, в котором часы.
+ * Возвращает true, если value в диапозоне от min до max включительно.
  *
- * @param {number} hours
+ * @param {number}value
+ * @param {number}min
+ * @param {number}max
  * @returns {boolean}
  */
-function checkHours(hours)
+function checkBoundary(value, min, max)
 {
-    return (hours >= 0 && hours <= 23)
+    return (value >= min && value <= max);
 }
+
 
 function printHelp()
 {
@@ -183,17 +181,6 @@ function printHelp()
 }
 
 
-/**
- * Проверка диапозона числа, в котором минуты.
- *
- * @param {number} minutes
- * @returns {boolean}
- */
-function checkMinutes(minutes)
-{
-    return (minutes >= 0 && minutes <= 59)
-}
-
 var hours = process.argv[2];
 var minutes = process.argv[3];
 
@@ -201,7 +188,7 @@ checkCode = checkCorrectOfArgs(process.argv);
 
 if (checkCode == 0)
 {
-    if (checkHours(hours) && checkMinutes(minutes))
+    if (checkBoundary(hours, 0, 23) && checkBoundary(minutes,0 ,59))
     {
         console.log(getRomanTime(hours), ' : ', getRomanTime(minutes));
         printBeautyRomanTime(getRomanTime(hours), getRomanTime(minutes));
